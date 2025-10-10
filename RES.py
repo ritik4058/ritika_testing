@@ -29,7 +29,8 @@ with tabs[1]:
         moisture_content = (weight_after/ weight_before) * 100
         st.write(f"Moisture Content: {moisture_content:.2f} %")
         st.write(f"Equivalent 50g Dry Weight: {dry_weight:.2f} g")
-
+        st.write("NOTE TO SELF: Add in the different sample components, the moisture tests etc..")
+        
 # ---- Filtrate Analysis ----
 with tabs[2]:
     st.header("Filtrate Analysis")
@@ -81,7 +82,7 @@ with tabs[3]:
     coarse_reject = st.number_input("Coarse Screen Reject (%)")
     fine_reject = st.number_input("Fine Screen Reject (%)")
     st.write(f"Coarse: {coarse_reject} % | Fine: {fine_reject} %")
-    st.write("change to add the tine weight and output weight before calculating the percentage.")
+    st.write("change to add the tin weight and output weight before calculating the percentage.")
 # ---- Macrostickies ----
 with tabs[4]:
     st.header("Macrostickies Data")
