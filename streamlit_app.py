@@ -17,7 +17,7 @@ tabs = st.tabs([
 # ---- Overview ----
 with tabs[0]:
     st.header("Overview")
-    st.write("Summary of all tests, questionnaire answers, key results Need to pull from excel.")
+    st.write("To add: input SO number; sample name; date tested; questionnaire answers - Need to pull from excel.")
 
 # ---- Dry Content ----
 with tabs[1]:
@@ -81,7 +81,7 @@ with tabs[3]:
     coarse_reject = st.number_input("Coarse Screen Reject (%)")
     fine_reject = st.number_input("Fine Screen Reject (%)")
     st.write(f"Coarse: {coarse_reject} % | Fine: {fine_reject} %")
-
+    st.write("change to add the tine weight and output weight before calculating the percentage.")
 # ---- Macrostickies ----
 with tabs[4]:
     st.header("Macrostickies Data")
