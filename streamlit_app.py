@@ -29,7 +29,7 @@ with tabs[1]:
         moisture_content = (weight_after/ weight_before) * 100
         st.write(f"Moisture Content: {moisture_content:.2f} %")
         st.write(f"Equivalent 50g Dry Weight: {dry_weight:.2f} g")
-        st.write("NOTE TO SELF: Add in the different sample components, the moisture tests etc..")
+        st.write("NOTE TO SELF: Add in the different sample components - WEIGHTS, the moisture tests etc..")
         
 # ---- Filtrate Analysis ----
 with tabs[2]:
