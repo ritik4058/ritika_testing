@@ -11,7 +11,8 @@ tabs = st.tabs([
     "Filtrate Analysis",
     "Lab Data – Screens & Rejects",
     "Macrostickies",
-    "Scorecard"
+    "Scorecard", 
+    "Dial"
 ])
 
 # ---- Overview ----
@@ -19,10 +20,10 @@ with tabs[0]:
     st.header("Overview")
     sample_name = st.text_input("Sample Name")
     order_number = st.text_input("Order Number")
-    date_tested = st.date_input("Date of Testing")
+    date_tested = st.date_input("Date of Testing", format="DD-MM-YYYY")
     st.write(f"Sample Name: {sample_name}")
     st.write(f"Order Number: {order_number}")
-    st.write(f"Date of Testing: {date_tested}")
+    st.write(f"Date of Testing: {date_tested.strftime('%d-%m-%Y')}")}")
 
 
 # ---- Dry Content ----
@@ -49,6 +50,7 @@ with tabs[1]:
         st.write(f"Average Moisture Content: {avg_moisture:.2f} %")
         avg_bone_dry_equiv = (((weight_after1 / weight_before1) + (weight_after2 / weight_before2)) / 2) * 50
         st.write(f"Average 50g Bone Dry Equivalent: {avg_bone_dry_equiv:.2f} g")
+        st.write("Add in the calc for amount of water needed for disintegration, sample for fine screen testing, stock consistency, macrostickies plus option for multiple moisture tests")
         
 # ---- Filtrate Analysis ----
 with tabs[2]:
@@ -186,4 +188,10 @@ with tabs[4]:
     # ---- Scorecard ----
 with tabs[5]:
     st.header("Scorecard")
+    st.write("To be added")
+
+    #---- Dial -----
+with tabs[6]:
+    st.header("Dial")
+    st.write("To be added")
     
