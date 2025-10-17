@@ -129,7 +129,6 @@ with tabs[4]:
     percentage_to_sample_fine = fine_reject/20 * 100 if fine_reject else 0
     st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
 
-
     # ---- Macrostickies ----
 with tabs[5]:
     st.header("Macrostickies AREA Data")
