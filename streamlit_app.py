@@ -24,7 +24,7 @@ with tabs[0]:
     date_tested = st.date_input("Date of Testing", format="DD-MM-YYYY")
     st.write(f"Sample Name: {sample_name}")
     st.write(f"Order Number: {order_number}")
-    st.write(f"Date of Testing: {date_tested.strftime('%d-%m-%Y')}")}")
+    st.write(f"Date of Testing: {date_tested.strftime('%d-%m-%Y')}")
 
 
 # ---- Dry Content ----
