@@ -107,7 +107,7 @@ with tabs[3]:
     output_weight = st.number_input("Output Weight", step=0.0001, format="%.4f")
     residue_oven_dry = (output_weight - filter_paper)
     stock_consistency = (residue_oven_dry / water_input)
-    st.write(f"Stock Consistency: {stock_consistency:.2f} %)
+    st.write(f"Stock Consistency: {stock_consistency:.2f} %")
     
     st.subheader("Coarse Rejects")
     coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
