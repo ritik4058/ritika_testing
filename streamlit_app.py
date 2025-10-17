@@ -244,3 +244,5 @@ with tabs[6]:
 with tabs[7]:
     st.header("Dial")
     st.write("To be added")
+
+    
