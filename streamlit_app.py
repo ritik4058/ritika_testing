@@ -124,13 +124,13 @@ with tabs[3]:
     st.write(f"Coarse: {percentage_to_sample:.2f} %")
 
 with tabs[4]:
-    st.header("Fine Screen")
-    st.subheader("Fine Rejects")
-    fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
-    fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
-    fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
-    percentage_to_sample_fine = fine_reject / 20 * 100 if fine_reject else 0
-    st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
+        st.header("Fine Screen")
+        st.subheader("Fine Rejects")
+        fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
+        fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
+        fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
+        percentage_to_sample_fine = fine_reject / 20 * 100 if fine_reject else 0
+        st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
 
     # Calculate total yield after coarse and fine rejects
     total_yield = (100 - percentage_to_sample - percentage_to_sample_fine)
