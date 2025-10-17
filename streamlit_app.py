@@ -105,25 +105,30 @@ with tabs[3]:
     filter_paper = st.number_input("Filter Paper", step=0.0001, format="%.4f")
     water_input = st.number_input("Input Weight", step=0.0001, format="%.4f")
     output_weight = st.number_input("Output Weight", step=0.0001, format="%.4f")
-    residue_oven_dry = (output_weight - filter_paper)
-    stock_consistency = (residue_oven_dry / water_input)
-    st.write(f"Stock Consistency: {stock_consistency:.2f} %")
+    residue_oven_dry = output_weight - filter_paper
     
+    if water_input and water_input != 0:
+        stock_consistency = (residue_oven_dry / water_input) * 100 
+        st.write(f"Stock Consistency: {stock_consistency:.2f} %")
+    else:
+        st.warning("Input Weight is zero or missing — cannot calculate stock consistency.")
+
     st.subheader("Coarse Rejects")
     coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
     coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
     coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
     percentage_to_sample = coarse_reject/50 * 100 if coarse_reject else 0
     st.write(f"Coarse: {percentage_to_sample:.2f} %")
-    
-    st.subheader("Fine Rejects")
+
+    # ---- Fine Screen ----
+with tabs[4]:
+      st.subheader("Fine Rejects")
     fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
     fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
     fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
     percentage_to_sample_fine = fine_reject/20 * 100 if fine_reject else 0
     st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
-    total_yield = (100 - percentage_to_sample-percentage_to_sample_fine)
-    st.write(f"Total Yield: {total_yield:.2f} %")
+
 
     # ---- Macrostickies ----
 with tabs[4]:
@@ -139,7 +144,7 @@ with tabs[4]:
         "Screening 2": [0.00] * num_sets
     }
     df = pd.DataFrame(initial_data)
-    edited_df = st.data_editor(df, num_rows="dynamic")
+    edited_df = st.data_editor(df, num_rows="dynamic", key="area_data")
     # Calculate mean and stdev for each row
     edited_df["Mean"] = edited_df[["Screening 1", "Screening 2"]].mean(axis=1).round(2)
     edited_df["Std Dev"] = edited_df[["Screening 1", "Screening 2"]].std(axis=1).round(2)
@@ -185,7 +190,7 @@ with tabs[4]:
         "Mean": round(edited_1_df["Mean"].sum(), 2),
         "Std Dev": round(edited_1_df["Std Dev"].sum(), 2)
     }
-    results1_df = edited_df.copy()
+    results1_df = edited_1_df.copy()
     results1_df.iloc[-1] = total_row
     st.write("Results:")
     display1_df = results1_df.copy()
@@ -199,6 +204,8 @@ with tabs[4]:
 with tabs[5]:
     st.header("Scorecard")
     st.write("To be added")
+    total_yield = (100 - percentage_to_sample-percentage_to_sample_fine)
+    st.write(f"Total Yield: {total_yield:.2f} %")
 
     #---- Dial -----
 with tabs[6]:
