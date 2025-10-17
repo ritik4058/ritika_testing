@@ -122,7 +122,7 @@ with tabs[3]:
 
     # ---- Fine Screen ----
 with tabs[4]:
-      st.subheader("Fine Rejects")
+    st.subheader("Fine Rejects")
     fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
     fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
     fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
@@ -131,7 +131,7 @@ with tabs[4]:
 
 
     # ---- Macrostickies ----
-with tabs[4]:
+with tabs[5]:
     st.header("Macrostickies AREA Data")
     import pandas as pd
     import numpy as np
@@ -201,14 +201,14 @@ with tabs[4]:
     st.table(display1_df)
 
     # ---- Scorecard ----
-with tabs[5]:
+with tabs[6]:
     st.header("Scorecard")
     st.write("To be added")
     total_yield = (100 - percentage_to_sample-percentage_to_sample_fine)
     st.write(f"Total Yield: {total_yield:.2f} %")
 
     #---- Dial -----
-with tabs[6]:
+with tabs[7]:
     st.header("Dial")
     st.write("To be added")
     
