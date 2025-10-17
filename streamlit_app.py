@@ -9,7 +9,8 @@ tabs = st.tabs([
     "Overview",
     "Dry Content & Sample Prep",
     "Filtrate Analysis",
-    "Lab Data – Screens & Rejects",
+    "Coarse Screen",
+    "Fine Screen",
     "Macrostickies",
     "Scorecard", 
     "Dial"
@@ -30,16 +31,16 @@ with tabs[0]:
 with tabs[1]:
     st.header("Dry Content & Sample Prep")
     st.subheader("Moisture Test 1")
-    weight_before1 = st.number_input("Weight Before Drying (Test 1, g)", key="weight_before1")
-    weight_after1 = st.number_input("Weight After Drying (Test 1, g)", key="weight_after1")
+    weight_before1 = st.number_input("Air Dry Mass (Test 1, g)", key="weight_before1")
+    weight_after1 = st.number_input("Oven Dry Mass (Test 1, g)", key="weight_after1")
     moisture1 = None
     if weight_before1:
         moisture1 = (weight_after1 / weight_before1) * 100
         st.write(f"Moisture Content (Test 1): {moisture1:.2f} %")
 
     st.subheader("Moisture Test 2")
-    weight_before2 = st.number_input("Weight Before Drying (Test 2, g)", key="weight_before2")
-    weight_after2 = st.number_input("Weight After Drying (Test 2, g)", key="weight_after2")
+    weight_before2 = st.number_input("Air Dry Mass (Test 2, g)", key="weight_before2")
+    weight_after2 = st.number_input("Oven Dry Mass (Test 2, g)", key="weight_after2")
     moisture2 = None
     if weight_before2:
         moisture2 = (weight_after2 / weight_before2) * 100
@@ -99,19 +100,28 @@ with tabs[2]:
 
 # ---- Lab Data – Screens & Rejects ----
 with tabs[3]:
-    st.header("Lab Data – Screens & Rejects")
+    st.header("Coarse Screen")
+    st.subheader("Stock Consistency")
+    filter_paper = st.number_input("Filter Paper", step=0.0001, format="%.4f")
+    water_input = st.number_input("Input Weight", step=0.0001, format="%.4f")
+    output_weight = st.number_input("Output Weight", step=0.0001, format="%.4f")
+    residue_oven_dry = (output_weight - filter_paper)
+    stock_consistency = (residue_oven_dry / water_input)
+    st.write(f"Stock Consistency: {stock_consistency:.2f} %)
+    
     st.subheader("Coarse Rejects")
     coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
     coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
     coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
     percentage_to_sample = coarse_reject/50 * 100 if coarse_reject else 0
-
+    st.write(f"Coarse: {percentage_to_sample:.2f} %)
+    
     st.subheader("Fine Rejects")
     fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
     fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
     fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
     percentage_to_sample_fine = fine_reject/20 * 100 if fine_reject else 0
-    st.write(f"Coarse: {percentage_to_sample:.2f} % | Fine: {percentage_to_sample_fine:.2f} %")
+    st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
     total_yield = (100 - percentage_to_sample-percentage_to_sample_fine)
     st.write(f"Total Yield: {total_yield:.2f} %")
 
