@@ -117,24 +117,21 @@ with tabs[3]:
         st.warning("Input Weight is zero or missing — cannot calculate stock consistency.")
 
     st.subheader("Coarse Rejects")
-coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
-coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
-coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
-percentage_to_sample = coarse_reject / 50 * 100 if coarse_reject else 0
-st.write(f"Coarse: {percentage_to_sample:.2f} %")
+    coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
+    coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
+    coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
+    percentage_to_sample = coarse_reject / 50 * 100 if coarse_reject else 0
+    st.write(f"Coarse: {percentage_to_sample:.2f} %")
 
+#---- Fine Screen -----
 with tabs[4]:
     st.header("Fine Screen")
-    st.subheader("Fine Rejects")
-    fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
-    fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
-    fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
-    percentage_to_sample_fine = fine_reject / 20 * 100 if fine_reject else 0
-    st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
-
-    # Calculate total yield after coarse and fine rejects
-    total_yield = (100 - percentage_to_sample - percentage_to_sample_fine)
-    st.write(f"Total Yield: {total_yield:.2f} %")
+    st.subheader("Coarse Rejects")
+    coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
+    coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
+    coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
+    percentage_to_sample = coarse_reject / 50 * 100 if coarse_reject else 0
+    st.write(f"Coarse: {percentage_to_sample:.2f} %")
 
 with tabs[5]:
     st.header("Macrostickies AREA Data")
