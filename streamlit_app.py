@@ -114,7 +114,7 @@ with tabs[3]:
     coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
     coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
     percentage_to_sample = coarse_reject/50 * 100 if coarse_reject else 0
-    st.write(f"Coarse: {percentage_to_sample:.2f} %)
+    st.write(f"Coarse: {percentage_to_sample:.2f} %")
     
     st.subheader("Fine Rejects")
     fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
