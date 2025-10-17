@@ -12,8 +12,8 @@ tabs = st.tabs([
     "Coarse Screen",
     "Fine Screen",
     "Macrostickies",
-    "Scorecard", 
-    "Dial"
+    "Scorecard",
+    "Dial",
 ])
 
 # ---- Overview ----
@@ -51,8 +51,10 @@ with tabs[1]:
         st.write(f"Average Moisture Content: {avg_moisture:.2f} %")
         avg_bone_dry_equiv = (((weight_after1 / weight_before1) + (weight_after2 / weight_before2)) / 2) * 50
         st.write(f"Average 50g Bone Dry Equivalent: {avg_bone_dry_equiv:.2f} g")
-        st.write("Add in the calc for amount of water needed for disintegration, sample for fine screen testing, stock consistency, macrostickies plus option for multiple moisture tests")
-        
+        st.write(
+            "Add in the calc for amount of water needed for disintegration, sample for fine screen testing, stock consistency, macrostickies plus option for multiple moisture tests"
+        )
+
 # ---- Filtrate Analysis ----
 with tabs[2]:
     st.header("Filtrate Analysis")
@@ -62,7 +64,7 @@ with tabs[2]:
     filtrate1_output_weight = st.number_input("Filtrate 1 - Output Weight (g)", format="%.4f")
     filtrate1_residue = filtrate1_tin_weight - filtrate1_output_weight
     filtrate1_evap_residue = filtrate1_residue / filtrate1_input_weight if filtrate1_input_weight else 0
-    
+
     st.subheader("Filtrate 2")
     filtrate2_tin_weight = st.number_input("Filtrate 2 - Tin Weight (g)", step=0.0001, format="%.4f")
     filtrate2_input_weight = st.number_input("Filtrate 2 - Input Weight (g)", format="%.2f")
@@ -86,14 +88,15 @@ with tabs[2]:
 
     # Display table of evaporation residues
     import pandas as pd
+
     evap_data = {
         "Sample": ["Filtrate 1", "Filtrate 2", "Water 1", "Water 2"],
         "Evaporation Residue": [
             round(filtrate1_evap_residue, 4),
             round(filtrate2_evap_residue, 4),
             round(water1_evap_residue, 4),
-            round(water2_evap_residue, 4)
-        ]
+            round(water2_evap_residue, 4),
+        ],
     }
     evap_df = pd.DataFrame(evap_data)
     st.table(evap_df)
@@ -106,41 +109,60 @@ with tabs[3]:
     water_input = st.number_input("Input Weight", step=0.0001, format="%.4f")
     output_weight = st.number_input("Output Weight", step=0.0001, format="%.4f")
     residue_oven_dry = output_weight - filter_paper
-    
+
     if water_input and water_input != 0:
-        stock_consistency = (residue_oven_dry / water_input) * 100 
+        stock_consistency = (residue_oven_dry / water_input) * 100
         st.write(f"Stock Consistency: {stock_consistency:.2f} %")
     else:
         st.warning("Input Weight is zero or missing — cannot calculate stock consistency.")
 
     st.subheader("Coarse Rejects")
-        coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
-        coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
-        coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
-        percentage_to_sample = coarse_reject/50 * 100 if coarse_reject else 0
-        st.write(f"Coarse: {percentage_to_sample:.2f} %")
+    coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
+    coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
+    coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
+    percentage_to_sample = coarse_reject / 50 * 100 if coarse_reject else 0
+    st.write(f"Coarse: {percentage_to_sample:.2f} %")
 
-    # ---- Fine Screen ----
 with tabs[4]:
+    st.header("Fine Screen")
     st.subheader("Fine Rejects")
-        fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
-        fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
-        fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
-        percentage_to_sample_fine = fine_reject/20 * 100 if fine_reject else 0
-        st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
+    fine_tin_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
+    fine_output_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
+    fine_reject = (fine_output_weight - fine_tin_weight) if fine_tin_weight else 0
+    percentage_to_sample_fine = fine_reject / 20 * 100 if fine_reject else 0
+    st.write(f"Fine: {percentage_to_sample_fine:.2f} %")
 
-    # ---- Macrostickies ----
+    # Calculate total yield after coarse and fine rejects
+    total_yield = (100 - percentage_to_sample - percentage_to_sample_fine)
+    st.write(f"Total Yield: {total_yield:.2f} %")
+
 with tabs[5]:
     st.header("Macrostickies AREA Data")
     import pandas as pd
     import numpy as np
     st.write("Paste AREA data below (Screening 1 and Screening 2):")
-    set_numbers = ["150 - 200 µm", "200 - 300 µm", "300 - 400 µm", "400 - 500 µm", "500 - 600 µm", "600 - 1000 µm", "1000 - 1500µm", "1500 - 2000µm", "2000 - 3000µm", "3000 - 5000µm", "5000 - 10000µm", "10000 - 20000µm", "20000 - 50000µm", "50000 - 200000µm", "150 - 200000µm"]
+    set_numbers = [
+        "150 - 200 µm",
+        "200 - 300 µm",
+        "300 - 400 µm",
+        "400 - 500 µm",
+        "500 - 600 µm",
+        "600 - 1000 µm",
+        "1000 - 1500µm",
+        "1500 - 2000µm",
+        "2000 - 3000µm",
+        "3000 - 5000µm",
+        "5000 - 10000µm",
+        "10000 - 20000µm",
+        "20000 - 50000µm",
+        "50000 - 200000µm",
+        "150 - 200000µm",
+    ]
     num_sets = len(set_numbers)
     initial_data = {
         "Set Number": set_numbers,
         "Screening 1": [0.00] * num_sets,
-        "Screening 2": [0.00] * num_sets
+        "Screening 2": [0.00] * num_sets,
     }
     df = pd.DataFrame(initial_data)
     edited_df = st.data_editor(df, num_rows="dynamic", key="area_data")
@@ -154,7 +176,7 @@ with tabs[5]:
         "Screening 1": round(edited_df["Screening 1"].sum(), 2),
         "Screening 2": round(edited_df["Screening 2"].sum(), 2),
         "Mean": round(edited_df["Mean"].sum(), 2),
-        "Std Dev": round(edited_df["Std Dev"].sum(), 2)
+        "Std Dev": round(edited_df["Std Dev"].sum(), 2),
     }
     results_df = edited_df.copy()
     results_df.iloc[-1] = total_row
@@ -170,12 +192,28 @@ with tabs[5]:
     import pandas as pd
     import numpy as np
     st.write("Paste NUMBER data below (Screening 1 and Screening 2):")
-    set_numbers = ["150 - 200 µm", "200 - 300 µm", "300 - 400 µm", "400 - 500 µm", "500 - 600 µm", "600 - 1000 µm", "1000 - 1500µm", "1500 - 2000µm", "2000 - 3000µm", "3000 - 5000µm", "5000 - 10000µm", "10000 - 20000µm", "20000 - 50000µm", "50000 - 200000µm", "150 - 200000µm"]
+    set_numbers = [
+        "150 - 200 µm",
+        "200 - 300 µm",
+        "300 - 400 µm",
+        "400 - 500 µm",
+        "500 - 600 µm",
+        "600 - 1000 µm",
+        "1000 - 1500µm",
+        "1500 - 2000µm",
+        "2000 - 3000µm",
+        "3000 - 5000µm",
+        "5000 - 10000µm",
+        "10000 - 20000µm",
+        "20000 - 50000µm",
+        "50000 - 200000µm",
+        "150 - 200000µm",
+    ]
     num_sets = len(set_numbers)
     initial_data_1 = {
         "Set Number": set_numbers,
         "Screening 1": [0.00] * num_sets,
-        "Screening 2": [0.00] * num_sets
+        "Screening 2": [0.00] * num_sets,
     }
     df = pd.DataFrame(initial_data_1)
     edited_1_df = st.data_editor(df, num_rows="dynamic", key="number_data")
@@ -187,7 +225,7 @@ with tabs[5]:
         "Screening 1": round(edited_1_df["Screening 1"].sum(), 2),
         "Screening 2": round(edited_1_df["Screening 2"].sum(), 2),
         "Mean": round(edited_1_df["Mean"].sum(), 2),
-        "Std Dev": round(edited_1_df["Std Dev"].sum(), 2)
+        "Std Dev": round(edited_1_df["Std Dev"].sum(), 2),
     }
     results1_df = edited_1_df.copy()
     results1_df.iloc[-1] = total_row
@@ -199,15 +237,10 @@ with tabs[5]:
     display1_df["Std Dev"] = display1_df["Std Dev"].map(lambda x: f"{x:.2f}")
     st.table(display1_df)
 
-    # ---- Scorecard ----
 with tabs[6]:
     st.header("Scorecard")
     st.write("To be added")
-    total_yield = (100 - percentage_to_sample-percentage_to_sample_fine)
-    st.write(f"Total Yield: {total_yield:.2f} %")
 
-    #---- Dial -----
 with tabs[7]:
     st.header("Dial")
     st.write("To be added")
-    
