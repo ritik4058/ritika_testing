@@ -126,12 +126,12 @@ with tabs[3]:
 #---- Fine Screen -----
 with tabs[4]:
     st.header("Fine Screen")
-    st.subheader("Coarse Rejects")
-    coarse_tin_weight = st.number_input("Coarse Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
-    coarse_output_weight = st.number_input("Coarse Rejects - Output Weight (g)", format="%.4f")
-    coarse_reject = (coarse_output_weight - coarse_tin_weight) if coarse_tin_weight else 0
-    percentage_to_sample = coarse_reject / 50 * 100 if coarse_reject else 0
-    st.write(f"Coarse: {percentage_to_sample:.2f} %")
+    st.subheader("Fine Rejects")
+    finess_tins_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
+    finess_outputs_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
+    finess_reject = (finess_outputs_weight - finess_tins_weight) if finess_tins_weight else 0
+    percentage_to_sample = fine_reject / 20 * 100 if fine_reject else 0
+    st.write(f"Fine: {percentage_to_sample:.2f} %")
 
 with tabs[5]:
     st.header("Macrostickies AREA Data")
