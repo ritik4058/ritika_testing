@@ -130,7 +130,7 @@ with tabs[4]:
     finess_tins_weight = st.number_input("Fine Rejects - Tin Weight (g)", step=0.0001, format="%.4f")
     finess_outputs_weight = st.number_input("Fine Rejects - Output Weight (g)", format="%.4f")
     finess_reject = (finess_outputs_weight - finess_tins_weight) if finess_tins_weight else 0
-    percentage_to_sample = fine_reject / 20 * 100 if fine_reject else 0
+    percentage_to_sample = fine_reject / 20 * 100 
     st.write(f"Fine: {percentage_to_sample:.2f} %")
 
 with tabs[5]:
