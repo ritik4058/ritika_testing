@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import streamlit as st
 
 st.set_page_config(page_title="Recyclability Lab Tool", layout="wide")
@@ -30,30 +31,113 @@ with tabs[0]:
 # ---- Dry Content ----
 with tabs[1]:
     st.header("Dry Content & Sample Prep")
-    st.subheader("Moisture Test 1")
-    weight_before1 = st.number_input("Air Dry Mass (Test 1, g)", key="weight_before1")
-    weight_after1 = st.number_input("Oven Dry Mass (Test 1, g)", key="weight_after1")
-    moisture1 = None
-    if weight_before1:
-        moisture1 = (weight_after1 / weight_before1) * 100
-        st.write(f"Moisture Content (Test 1): {moisture1:.2f} %")
+    
+    # Create a DataFrame for moisture test components
+    import pandas as pd
+    # Initialize default data with one row
+    default_data = {
+        "Component": ["Main"],
+        "Air Dry Mass (g) 1": [0.0],
+        "Oven Dry Mass (g) 1": [0.0],
+        "Dry Content (%) 1": [0.0],
+        "Air Dry Mass (g) 2": [0.0],
+        "Oven Dry Mass (g) 2": [0.0],
+        "Dry Content (%) 2": [0.0],
+    }
+    
+    # Create editable DataFrame
+    moisture_df = pd.DataFrame(default_data)
 
-    st.subheader("Moisture Test 2")
-    weight_before2 = st.number_input("Air Dry Mass (Test 2, g)", key="weight_before2")
-    weight_after2 = st.number_input("Oven Dry Mass (Test 2, g)", key="weight_after2")
-    moisture2 = None
-    if weight_before2:
-        moisture2 = (weight_after2 / weight_before2) * 100
-        st.write(f"Moisture Content (Test 2): {moisture2:.2f} %")
+    # First, create the column configuration
+    column_config = {
+        "Component": st.column_config.TextColumn(
+            "Component",
+            help="Enter component name (e.g., Main, Lid, etc.)"
+        ),
+        "Air Dry Mass (g) 1": st.column_config.NumberColumn(
+            "Air Dry Mass (g) 1",
+            help="Enter the air dry mass in grams for test 1",
+            min_value=0.0,
+            format="%.4f"
+        ),
+        "Oven Dry Mass (g) 1": st.column_config.NumberColumn(
+            "Oven Dry Mass (g) 1",
+            help="Enter the oven dry mass in grams for test 1",
+            min_value=0.0,
+            format="%.4f"
+        ),
+        
+        "Air Dry Mass (g) 2": st.column_config.NumberColumn(
+            "Air Dry Mass (g) 2",
+            help="Enter the air dry mass in grams for test 2",
+            min_value=0.0,
+            format="%.4f"
+        ),
+        "Oven Dry Mass (g) 2": st.column_config.NumberColumn(
+            "Oven Dry Mass (g) 2",
+            help="Enter the oven dry mass in grams for test 2",
+            min_value=0.0,
+            format="%.4f"
+        ),
+    }
 
-    if moisture1 is not None and moisture2 is not None:
-        avg_moisture = (moisture1 + moisture2) / 2
-        st.write(f"Average Moisture Content: {avg_moisture:.2f} %")
-        avg_bone_dry_equiv = (((weight_after1 / weight_before1) + (weight_after2 / weight_before2)) / 2) * 50
-        st.write(f"Average 50g Bone Dry Equivalent: {avg_bone_dry_equiv:.2f} g")
-        st.write(
-            "Add in the calc for amount of water needed for disintegration, sample for fine screen testing, stock consistency, macrostickies plus option for multiple moisture tests"
-        )
+    # Edit the DataFrame
+    edited_moisture_df = st.data_editor(
+        moisture_df,
+        num_rows="dynamic",
+        column_config=column_config,
+        hide_index=True,
+        key="moisture_test_table"
+    )
+
+    # After editing, calculate the dry content percentages safely to avoid division by zero / NaN
+    import numpy as np
+
+    airdrymass1 = edited_moisture_df["Air Dry Mass (g) 1"].astype(float)
+    ovendrymass1 = edited_moisture_df["Oven Dry Mass (g) 1"].astype(float)
+    airdrymass2 = edited_moisture_df["Air Dry Mass (g) 2"].astype(float)
+    ovendrymass2 = edited_moisture_df["Oven Dry Mass (g) 2"].astype(float)
+
+    # safe percent: where air mass > 0 compute (oven/air)*100, otherwise NaN
+    def safe_percent(oven, air):
+        with np.errstate(divide='ignore', invalid='ignore'):
+            res = np.where(air > 0, (oven / air) * 100.0, np.nan)
+        return res
+
+    edited_moisture_df["Dry Content (%) 1"] = safe_percent(ovendrymass1.values, airdrymass1.values)
+    edited_moisture_df["Dry Content (%) 2"] = safe_percent(ovendrymass2.values, airdrymass2.values)
+
+    # Calculate averages across both tests, skipping NaNs
+    avg_dry_content = edited_moisture_df[["Dry Content (%) 1", "Dry Content (%) 2"]].mean(axis=1, skipna=True).mean(skipna=True)
+
+    # Show results: display per-row moisture percentages (rounded) and the overall average
+    st.write(f"Average Dry Content: {avg_dry_content:.2f} %" if not np.isnan(avg_dry_content) else "Average Dry Content: -")
+    st.write("Moisture Test 1 (%):")
+    st.dataframe(edited_moisture_df["Dry Content (%) 1"].round(2).fillna("-"))
+    st.write("Moisture Test 2 (%):")
+    st.dataframe(edited_moisture_df["Dry Content (%) 2"].round(2).fillna("-"))
+
+    # Calculate average bone dry equivalent safely
+    def safe_mean_ratio(oven, air):
+        with np.errstate(divide='ignore', invalid='ignore'):
+            ratios = np.where(air > 0, oven / air, np.nan)
+        return np.nanmean(ratios) if np.any(~np.isnan(ratios)) else np.nan
+
+    avg_ratio_1 = safe_mean_ratio(ovendrymass1.values, airdrymass1.values)
+    avg_ratio_2 = safe_mean_ratio(ovendrymass2.values, airdrymass2.values)
+    if not np.isnan(avg_ratio_1) or not np.isnan(avg_ratio_2):
+        avg_bone_dry_equiv = ((np.nanmean([avg_ratio_1, avg_ratio_2])) / 1.0) * 50
+    else:
+        avg_bone_dry_equiv = np.nan
+
+    # Display summary statistics
+    st.subheader("Summary")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.metric("Average Dry Content (%)", f"{avg_dry_content:.2f}%" if not np.isnan(avg_dry_content) else "-")
+    with col2:
+        st.metric("Average 50g Bone Dry Equivalent (g)", f"{avg_bone_dry_equiv:.2f}" if not np.isnan(avg_bone_dry_equiv) else "-")
+
 
 # ---- Filtrate Analysis ----
 with tabs[2]:
@@ -242,4 +326,3 @@ with tabs[7]:
     st.header("Dial")
     st.write("To be added")
 
-    
